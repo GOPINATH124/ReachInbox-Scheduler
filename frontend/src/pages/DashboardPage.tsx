@@ -45,7 +45,8 @@ export const DashboardPage: React.FC = () => {
   const [showSlackModal, setShowSlackModal] = useState(false);
 
   // Compose Campaign Form States
-  const [composeFrom, setComposeFrom] = useState('gr702597@gmail.com');
+  const [composeFrom, setComposeFrom] = useState('maribel15@ethereal.email');
+
 
 
 
@@ -491,11 +492,39 @@ export const DashboardPage: React.FC = () => {
               {/* Preview/Error Status Log */}
               {selectedEmail.errorMsg && (
                 <div className="pt-6 border-t border-slate-100">
-                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs font-mono text-slate-600">
-                    <span className="font-bold">Log Details:</span> {selectedEmail.errorMsg}
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs font-mono text-slate-600 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <span className="font-bold text-slate-800">Log Details:</span>{' '}
+                      {selectedEmail.errorMsg.includes('http') ? (
+                        <span>
+                          {selectedEmail.errorMsg.split('http')[0]}
+                          <a 
+                            href={'http' + selectedEmail.errorMsg.split('http')[1]} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-indigo-600 hover:text-indigo-500 underline font-semibold break-all"
+                          >
+                            {'http' + selectedEmail.errorMsg.split('http')[1]}
+                          </a>
+                        </span>
+                      ) : (
+                        selectedEmail.errorMsg
+                      )}
+                    </div>
+                    {selectedEmail.errorMsg.includes('http') && (
+                      <a 
+                        href={'http' + selectedEmail.errorMsg.split('http')[1]} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="shrink-0 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-[11px] rounded-xl transition-all shadow-sm flex items-center gap-1.5"
+                      >
+                        View Live Ethereal Preview
+                      </a>
+                    )}
                   </div>
                 </div>
               )}
+
             </div>
           </div>
         )}
@@ -624,11 +653,13 @@ export const DashboardPage: React.FC = () => {
                   onChange={(e) => setComposeFrom(e.target.value)}
                   className="bg-[#f8fafc] border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-slate-300"
                 >
+                  <option value="maribel15@ethereal.email">maribel15@ethereal.email</option>
                   <option value="gr702597@gmail.com">gr702597@gmail.com</option>
                   <option value={user?.email || 'dev@reachinbox.ai'}>{user?.email || 'dev@reachinbox.ai'}</option>
                   <option value="newsletter@reachinbox.ai">newsletter@reachinbox.ai</option>
                   <option value="no-reply@reachinbox.ai">no-reply@reachinbox.ai</option>
                 </select>
+
 
 
 
