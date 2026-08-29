@@ -46,7 +46,25 @@ async function initServices() {
   } catch (err) {
     console.error('DB scheduler daemon failed to start:', err);
   }
+
+  // 4. Diagnostic Timezone / DB Check
+  try {
+    const emails = await prisma.email.findMany({ take: 5 });
+    console.log('====================================');
+    console.log('=== DIAGNOSTIC TIMEZONE INSPECT ===');
+    console.log('Local Server Time:', new Date().toLocaleString());
+    console.log('UTC Server Time:', new Date().toISOString());
+    emails.forEach((e) => {
+      console.log(`- Email ${e.recipient} (Status: ${e.status})`);
+      console.log(`  scheduledAt (UTC):   ${new Date(e.scheduledAt).toISOString()}`);
+      console.log(`  scheduledAt (Local): ${new Date(e.scheduledAt).toLocaleString()}`);
+    });
+    console.log('====================================');
+  } catch (err) {
+    console.error('Diagnostic query failed:', err);
+  }
 }
+
 
 initServices();
 

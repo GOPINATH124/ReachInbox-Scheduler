@@ -13,8 +13,22 @@ export function startDatabaseScheduler() {
   if (isRunning) return;
   isRunning = true;
   console.log('🚀 DB Scheduler Daemon started (No Redis dependency)');
+  
+  // Failsafe: Recover any stuck 'SENDING' emails from a previous server stop/shutdown
+  prisma.email.updateMany({
+    where: { status: 'SENDING' },
+    data: { status: 'SCHEDULED' },
+  }).then((res) => {
+    if (res.count > 0) {
+      console.log(`[Scheduler] Recovered ${res.count} stuck emails from previous execution.`);
+    }
+  }).catch((err) => {
+    console.error('[Scheduler] Failed to recover stuck emails:', err);
+  });
+
   tick();
 }
+
 
 /**
  * Daemon polling loop tick.
