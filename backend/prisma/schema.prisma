@@ -1,0 +1,54 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id              String           @id @default(uuid())
+  googleId        String           @unique
+  email           String           @unique
+  name            String
+  avatar          String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  emails          Email[]
+  slackConnection SlackConnection?
+}
+
+model Email {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sender      String
+  recipient   String
+  subject     String
+  body        String
+  status      String   @default("PENDING") // PENDING, SCHEDULED, SENDING, SENT, FAILED, RATE_LIMITED
+  scheduledAt DateTime
+  sentAt      DateTime?
+  errorMsg    String?
+  jobId       String?  // Reference to scheduler job ID
+  hourlyLimit Int      @default(200)
+  minDelay    Int      @default(2) // in seconds
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+model SlackConnection {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken String
+  webhookUrl  String   // Slack Webhook Url
+  channelName String?
+  teamName    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
