@@ -490,12 +490,12 @@ export const DashboardPage: React.FC = () => {
               </div>
 
               {/* Preview/Error Status Log */}
-              {selectedEmail.errorMsg && (
-                <div className="pt-6 border-t border-slate-100">
-                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs font-mono text-slate-600 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <span className="font-bold text-slate-800">Log Details:</span>{' '}
-                      {selectedEmail.errorMsg.includes('http') ? (
+              <div className="pt-6 border-t border-slate-100">
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs font-mono text-slate-600 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <span className="font-bold text-slate-800">Delivery Log:</span>{' '}
+                    {selectedEmail.errorMsg ? (
+                      selectedEmail.errorMsg.includes('http') ? (
                         <span>
                           {selectedEmail.errorMsg.split('http')[0]}
                           <a 
@@ -509,21 +509,38 @@ export const DashboardPage: React.FC = () => {
                         </span>
                       ) : (
                         selectedEmail.errorMsg
-                      )}
-                    </div>
-                    {selectedEmail.errorMsg.includes('http') && (
+                      )
+                    ) : (
+                      <span className="text-emerald-700 font-semibold">
+                        Delivered successfully via SMTP ({selectedEmail.sender})
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    {selectedEmail.errorMsg && selectedEmail.errorMsg.includes('http') ? (
                       <a 
                         href={'http' + selectedEmail.errorMsg.split('http')[1]} 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="shrink-0 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-[11px] rounded-xl transition-all shadow-sm flex items-center gap-1.5"
+                        className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-[11px] rounded-xl transition-all shadow-sm flex items-center gap-1.5"
                       >
                         View Live Ethereal Preview
+                      </a>
+                    ) : (
+                      <a 
+                        href="https://ethereal.email/messages" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-[11px] rounded-xl transition-all shadow-sm flex items-center gap-1.5"
+                      >
+                        Open Ethereal Mailbox
                       </a>
                     )}
                   </div>
                 </div>
-              )}
+              </div>
+
 
             </div>
           </div>
