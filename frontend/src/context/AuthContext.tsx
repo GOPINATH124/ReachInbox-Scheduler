@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { api } from '../services/api';
+import { api, BACKEND_URL } from '../services/api';
 
 export interface User {
   id: string;
@@ -29,13 +29,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = () => {
     // Redirect browser to backend Google OAuth redirect endpoint
-    window.location.href = 'http://localhost:5000/api/auth/google';
+    window.location.href = `${BACKEND_URL}/api/auth/google`;
   };
 
   const devLogin = () => {
     // Redirect browser to backend dev-login bypass endpoint
-    window.location.href = 'http://localhost:5000/api/auth/dev-login';
+    window.location.href = `${BACKEND_URL}/api/auth/dev-login`;
   };
+
 
   const logout = async () => {
     try {

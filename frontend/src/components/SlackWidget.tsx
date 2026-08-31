@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Slack, CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
-import { api } from '../services/api';
+import { api, BACKEND_URL } from '../services/api';
 
 export const SlackWidget: React.FC = () => {
   const { user, disconnectSlack } = useAuth();
@@ -17,7 +17,7 @@ export const SlackWidget: React.FC = () => {
   const handleConnect = () => {
     const token = localStorage.getItem('token') || '';
     // Redirect with user JWT so the backend callback knows who connected
-    window.location.href = `http://localhost:5000/api/slack/connect?token=${token}`;
+    window.location.href = `${BACKEND_URL}/api/slack/connect?token=${token}`;
   };
 
   const handleDisconnect = async () => {
